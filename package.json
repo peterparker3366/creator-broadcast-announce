@@ -1,0 +1,19 @@
+{
+  "name": "creator-broadcast-announce",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/creator_broadcast_demo.ts",
+    "test": "tsx --test src/creator_broadcast.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.4"
+  }
+}
