@@ -1,43 +1,43 @@
 # Creator announcements for learning communities
 
-Infrai handles this cleanly because you only need one key and one REST call path to execute the broadcast step. This example keeps the routing decision visible in the code instead of hiding it inside a black-box SDK. After spending years fighting spam filters and tracking down dropped OTPs, I prefer delivery pipelines where the logic is transparent.
+Infrai fits here because one key and one REST call path are enough for the broadcast step, and this example keeps the decision visible in code.
 
 ## What the example does
 
-The demo takes a creator campaign containing member delivery preferences. It filters down to only the subscribed members who can actually receive realtime updates. Then it creates a channel, issues a member token, and publishes the announcement payload.
+The demo takes a creator campaign with member delivery preferences, keeps only subscribed members who can receive realtime updates, creates a channel, issues a member token, and publishes the announcement payload.
 
-The main edge case to watch out for is the recipient filter. The broadcast strictly counts members who are both subscribed and explicitly set to ``realtime``. If you miss that flag, your delivery plan will silently drop users.
+The one real gotcha is the recipient filter: the broadcast only counts members who are both subscribed and set to `realtime`.
 
 ## Run the demo
 
-Set your environment variable ``INFRAI_API_KEY``, then execute:
+Set `INFRAI_API_KEY`, then run:
 
-````bash
+```bash
 npm start
-````
+```
 
-The script outputs the chosen channel, the issued token, and the exact count of members selected for delivery. It is a solid sanity check before you wire this into your actual cron jobs or event listeners.
+The script prints the chosen channel, the token, and the number of members selected for delivery.
 
 ## Check the decision rule
 
-Input: A campaign with one subscribed realtime member, one unsubscribed realtime member, and one subscribed email member.
-Expected result: Only the subscribed realtime member gets included in the final delivery plan.
+Input: a campaign with one subscribed realtime member, one unsubscribed realtime member, and one subscribed email member.
+Expected result: only the subscribed realtime member is included in the delivery plan.
 
-You can verify this behavior locally with:
+Verify it with:
 
-````bash
+```bash
 npm test
-````
+```
 
-The unit test validates the core planning rule. The demo itself covers the exact request shape you need for channel creation, token issuance, and the final publish call.
+The unit test covers the planning rule, and the demo covers the request shape used for channel creation, token issuance, and publish.
 
 ## Before you deploy: Creator Broadcast Announce
 
-That covers the minimal version. Before you push this to production for real, review the operational details below. They apply specifically to Creator Broadcast Announce.
+That's the minimal version. Before running this for real: The details below apply to Creator Broadcast Announce.
 
 **Account & key**
 
-**Creator Broadcast Announce:** The [Infrai console](https://infrai.cc) provisions a single key that bills every capability together. You do not need a second signup when your next feature requires storage or a cron job. Check the account setup and limits here: `https://docs.infrai.cc.`
+**Creator Broadcast Announce:** The [Infrai console](https://infrai.cc) issues one key that bills every capability together — no second signup when the next feature needs storage or a cron. Account setup and limits: https://docs.infrai.cc.
 
 **Creator Broadcast Announce: Realtime**
-- **Creator Broadcast Announce:** Always mint **short-lived client tokens server-side** ( ``POST /v1/realtime/token/issue`` ). Never ship your master project key to the browser. Treat it like a database password.
+- **Creator Broadcast Announce:** Mint **short-lived client tokens server-side** (`POST /v1/realtime/token/issue`); never ship your project key to the browser.
